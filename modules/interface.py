@@ -92,7 +92,7 @@ def create_interface(
                     completed_count += 1
         
         # Format the queue stats display text
-        queue_stats_text = f"<p style='margin:0;color:white;' class='toolbar-text'>Queue: {pending_count} | Running: {running_count} | Completed: {completed_count}</p>"
+        queue_stats_text = f"<p style='margin:0;color:white;' class='toolbar-text'>佇列: {pending_count} | 運行中: {running_count} | 已完成: {completed_count}</p>"
         
         return queue_status_data, queue_stats_text
 
@@ -109,8 +109,6 @@ def create_interface(
     # Create the interface
     css = make_progress_bar_css()
     css += """
-
-    
     .short-import-box, .short-import-box > div {
         min-height: 40px !important;
         height: 40px !important;
@@ -315,14 +313,14 @@ def create_interface(
                 <div style="display: flex; align-items: center;">
                     <h1 class='toolbar-title'>FP Studio</h1>
                     <p class='toolbar-version'>{APP_VERSION_DISPLAY}</p>
-                    <p class='toolbar-patreon'><a href='https://patreon.com/Colinu' target='_blank'>Support on Patreon</a></p>
+                    <p class='toolbar-patreon'><a href='https://patreon.com/Colinu' target='_blank'>在 Patreon 上支持</a></p>
                 </div>
                 """)
             # REMOVED: refresh_stats_btn - Toolbar refresh button is no longer needed
             # with gr.Column(scale=0, min_width=40):
             #     refresh_stats_btn = gr.Button("⟳", elem_id="refresh-stats-btn", elem_classes="narrow-button")  
             with gr.Column(scale=1, min_width=180): # Queue Stats
-                queue_stats_display = gr.Markdown("<p style='margin:0;color:white;' class='toolbar-text'>Queue: 0 | Running: 0 | Completed: 0</p>")
+                queue_stats_display = gr.Markdown("<p style='margin:0;color:white;' class='toolbar-text'>佇列: 0 | 運行中: 0 | 已完成: 0</p>")
                 
             # --- System Stats Display - Single gr.Textbox per stat ---
             with gr.Column(scale=0, min_width=173, elem_id="toolbar-ram-col"): # RAM Column
@@ -367,38 +365,38 @@ def create_interface(
             
         # Essential to capture main_tabs_component for later use by send_to_toolbox_btn
         with gr.Tabs(elem_id="main_tabs") as main_tabs_component:
-            with gr.Tab("Generate", id="generate_tab"):
+            with gr.Tab("生成", id="generate_tab"): # "Generate" -> "生成"
                 with gr.Row():
                     with gr.Column(scale=2):
                         model_type = gr.Radio(
-                            choices=[("Original", "Original"), ("Original with Endframe", "Original with Endframe"), ("F1", "F1"), ("Video", "Video"), ("Video with Endframe", "Video with Endframe"), ("Video F1", "Video F1")],
+                            choices=[("原始", "Original"), ("帶結束幀的原始", "Original with Endframe"), ("F1", "F1"), ("影片", "Video"), ("帶結束幀的影片", "Video with Endframe"), ("影片 F1", "Video F1")],
                             value="Original",
-                            label="Generation Type"
+                            label="生成類型" # "Generation Type" -> "生成類型"
                         )
-                        with gr.Accordion("Original Presets", open=False, visible=True) as preset_accordion:
+                        with gr.Accordion("原始預設", open=False, visible=True) as preset_accordion: # "Original Presets" -> "原始預設"
                             with gr.Row():
-                                preset_dropdown = gr.Dropdown(label="Select Preset", choices=load_presets("Original"), interactive=True, scale=2)
-                                delete_preset_button = gr.Button("Delete", variant="stop", scale=1)
+                                preset_dropdown = gr.Dropdown(label="選擇預設", choices=load_presets("Original"), interactive=True, scale=2) # "Select Preset" -> "選擇預設"
+                                delete_preset_button = gr.Button("刪除", variant="stop", scale=1) # "Delete" -> "刪除"
                             with gr.Row():
-                                preset_name_textbox = gr.Textbox(label="Preset Name", placeholder="Enter a name for your preset", scale=2)
-                                save_preset_button = gr.Button("Save", variant="primary", scale=1)
+                                preset_name_textbox = gr.Textbox(label="預設名稱", placeholder="輸入您的預設名稱", scale=2) # "Preset Name" -> "預設名稱", "Enter a name for your preset" -> "輸入您的預設名稱"
+                                save_preset_button = gr.Button("儲存", variant="primary", scale=1) # "Save" -> "儲存"
                             with gr.Row(visible=False) as confirm_delete_row:
-                                gr.Markdown("### Are you sure you want to delete this preset?")
-                                confirm_delete_yes_btn = gr.Button("Yes, Delete", variant="stop")
-                                confirm_delete_no_btn = gr.Button("No, Go Back")
-                        with gr.Accordion("Basic Parameters", open=True, visible=True) as basic_parameters_accordion:
+                                gr.Markdown("### 您確定要刪除此預設嗎？") # "Are you sure you want to delete this preset?" -> "您確定要刪除此預設嗎？"
+                                confirm_delete_yes_btn = gr.Button("是，刪除", variant="stop") # "Yes, Delete" -> "是，刪除"
+                                confirm_delete_no_btn = gr.Button("否，返回") # "No, Go Back" -> "否，返回"
+                        with gr.Accordion("基本參數", open=True, visible=True) as basic_parameters_accordion: # "Basic Parameters" -> "基本參數"
                             with gr.Group():
-                                total_second_length = gr.Slider(label="Video Length (Seconds)", minimum=1, maximum=120, value=6, step=0.1)
-                                with gr.Row("Resolution"):
+                                total_second_length = gr.Slider(label="影片長度（秒）", minimum=1, maximum=120, value=6, step=0.1) # "Video Length (Seconds)" -> "影片長度（秒）"
+                                with gr.Row("解析度"): # "Resolution" -> "解析度"
                                     resolutionW = gr.Slider(
-                                        label="Width", minimum=128, maximum=768, value=640, step=32, 
-                                        info="Nearest valid width will be used."
+                                        label="寬度", minimum=128, maximum=768, value=640, step=32, 
+                                        info="將使用最接近的有效寬度。" # "Nearest valid width will be used." -> "將使用最接近的有效寬度。"
                                     )
                                     resolutionH = gr.Slider(
-                                        label="Height", minimum=128, maximum=768, value=640, step=32, 
-                                        info="Nearest valid height will be used."
+                                        label="高度", minimum=128, maximum=768, value=640, step=32, 
+                                        info="將使用最接近的有效高度。" # "Nearest valid height will be used." -> "將使用最接近的有效高度。"
                                     )
-                                resolution_text = gr.Markdown(value="<div style='text-align:right; padding:5px 15px 5px 5px;'>Selected bucket for resolution: 640 x 640</div>", label="", show_label=False)
+                                resolution_text = gr.Markdown(value="<div style='text-align:right; padding:5px 15px 5px 5px;'>所選解析度桶：640 x 640</div>", label="", show_label=False) # "Selected bucket for resolution:" -> "所選解析度桶："
 
                         # --- START OF REFACTORED XY PLOT SECTION ---
                         xy_plot_components = create_xy_plot_ui(
@@ -418,7 +416,7 @@ def create_interface(
                                         input_image = gr.Image(
                                             sources='upload',
                                             type="numpy",
-                                            label="Start Frame (optional)",
+                                            label="起始幀 (可選)", # "Start Frame (optional)" -> "起始幀 (可選)"
                                             elem_classes="contain-image",
                                             image_mode="RGB",
                                             show_download_button=False,
@@ -429,26 +427,25 @@ def create_interface(
                             with gr.Group(visible=False) as video_input_group:
                                 input_video = gr.Video(
                                     sources='upload',
-                                    label="Video Input",
+                                    label="影片輸入", # "Video Input" -> "影片輸入"
                                     height=420,
                                     show_label=True
                                 )
                                 combine_with_source = gr.Checkbox(
-                                    label="Combine with source video",
+                                    label="與來源影片結合", # "Combine with source video" -> "與來源影片結合"
                                     value=True,
-                                    info="If checked, the source video will be combined with the generated video",
+                                    info="如果勾選，來源影片將與生成的影片結合", # "If checked, the source video will be combined with the generated video" -> "如果勾選，來源影片將與生成的影片結合"
                                     interactive=True
                                 )
-                                num_cleaned_frames = gr.Slider(label="Number of Context Frames (Adherence to Video)", minimum=2, maximum=10, value=5, step=1, interactive=True, info="Expensive. Retain more video details. Reduce if memory issues or motion too restricted (jumpcut, ignoring prompt, still).")
+                                num_cleaned_frames = gr.Slider(label="上下文幀數（影片依賴度）", minimum=2, maximum=10, value=5, step=1, interactive=True, info="昂貴。保留更多影片細節。如果遇到記憶體問題或動作過於受限（跳接、忽略提示、靜止）則減少。") # "Number of Context Frames (Adherence to Video)" -> "上下文幀數（影片依賴度）", info translated
 
-                            
                             # End Frame Image Input
                             # Initial visibility is False, controlled by update_input_visibility
                             with gr.Column(scale=1, visible=False) as end_frame_group_original:
                                 end_frame_image_original = gr.Image(
                                     sources='upload',
                                     type="numpy",
-                                    label="End Frame (Optional)", 
+                                    label="結束幀 (可選)", # "End Frame (Optional)" -> "結束幀 (可選)"
                                     elem_classes="contain-image",
                                     image_mode="RGB",
                                     show_download_button=False,
@@ -460,33 +457,32 @@ def create_interface(
                             # Initial visibility is False, controlled by update_input_visibility
                             with gr.Group(visible=False) as end_frame_slider_group:
                                 end_frame_strength_original = gr.Slider(
-                                    label="End Frame Influence",
+                                    label="結束幀影響力", # "End Frame Influence" -> "結束幀影響力"
                                     minimum=0.05,
                                     maximum=1.0,
                                     value=1.0,
                                     step=0.05,
-                                    info="Controls how strongly the end frame guides the generation. 1.0 is full influence."
+                                    info="控制結束幀對生成影片的引導強度。1.0 為完全影響。" # "Controls how strongly the end frame guides the generation. 1.0 is full influence." -> "控制結束幀對生成影片的引導強度。1.0 為完全影響。"
                                 )
 
                             
+                            prompt = gr.Textbox(label="提示詞", value=default_prompt) # "Prompt" -> "提示詞"
 
-                            prompt = gr.Textbox(label="Prompt", value=default_prompt)
-
-                            with gr.Accordion("Prompt Parameters", open=False):
-                                n_prompt = gr.Textbox(label="Negative Prompt", value="", visible=True)  # Make visible for both models
+                            with gr.Accordion("提示詞參數", open=False): # "Prompt Parameters" -> "提示詞參數"
+                                n_prompt = gr.Textbox(label="負向提示詞", value="", visible=True) # "Negative Prompt" -> "負向提示詞"
 
                                 blend_sections = gr.Slider(
                                     minimum=0, maximum=10, value=4, step=1,
-                                    label="Number of sections to blend between prompts"
+                                    label="提示詞之間混合的區塊數量" # "Number of sections to blend between prompts" -> "提示詞之間混合的區塊數量"
                                 )
-                            with gr.Accordion("Generation Parameters", open=True):
+                            with gr.Accordion("生成參數", open=True): # "Generation Parameters" -> "生成參數"
                                 with gr.Row():
-                                    steps = gr.Slider(label="Steps", minimum=1, maximum=100, value=25, step=1)
+                                    steps = gr.Slider(label="步數", minimum=1, maximum=100, value=25, step=1) # "Steps" -> "步數"
                                 def on_input_image_change(img):
                                     if img is not None:
-                                        return gr.update(info="Nearest valid bucket size will be used. Height will be adjusted automatically."), gr.update(visible=False)
+                                        return gr.update(info="將使用最接近的有效桶大小。高度將自動調整。"), gr.update(visible=False) # Info translated
                                     else:
-                                        return gr.update(info="Nearest valid width will be used."), gr.update(visible=True)
+                                        return gr.update(info="將使用最接近的有效寬度。"), gr.update(visible=True) # Info translated
                                 input_image.change(fn=on_input_image_change, inputs=[input_image], outputs=[resolutionW, resolutionH])
                                 def on_resolution_change(img, resolutionW, resolutionH):
                                     out_bucket_resH, out_bucket_resW = [640, 640]
@@ -495,54 +491,54 @@ def create_interface(
                                         out_bucket_resH, out_bucket_resW = find_nearest_bucket(H, W, resolution=resolutionW)
                                     else:
                                         out_bucket_resH, out_bucket_resW = find_nearest_bucket(resolutionH, resolutionW, (resolutionW+resolutionH)/2) # if resolutionW > resolutionH else resolutionH
-                                    return gr.update(value=f"<div style='text-align:right; padding:5px 15px 5px 5px;'>Selected bucket for resolution: {out_bucket_resW} x {out_bucket_resH}</div>")
+                                    return gr.update(value=f"<div style='text-align:right; padding:5px 15px 5px 5px;'>所選解析度桶：{out_bucket_resW} x {out_bucket_resH}</div>") # Value translated
                                 resolutionW.change(fn=on_resolution_change, inputs=[input_image, resolutionW, resolutionH], outputs=[resolution_text], show_progress="hidden")
                                 resolutionH.change(fn=on_resolution_change, inputs=[input_image, resolutionW, resolutionH], outputs=[resolution_text], show_progress="hidden")
                                 
                                 with gr.Row():
-                                    seed = gr.Number(label="Seed", value=2500, precision=0)
-                                    randomize_seed = gr.Checkbox(label="Randomize", value=True, info="Generate a new random seed for each job")
-                            with gr.Accordion("LoRAs", open=False):
-                                with gr.Row():
-                                    lora_selector = gr.Dropdown(
-                                        choices=lora_names,
-                                        label="Select LoRAs to Load",
-                                        multiselect=True,
-                                        value=[],
-                                        info="Select one or more LoRAs to use for this job"
-                                    )
-                                    lora_names_states = gr.State(lora_names)
-                                    lora_sliders = {}
-                                    for lora in lora_names:
-                                        lora_sliders[lora] = gr.Slider(
-                                            minimum=0.0, maximum=2.0, value=1.0, step=0.01,
-                                            label=f"{lora} Weight", visible=False, interactive=True
+                                    seed = gr.Number(label="種子", value=2500, precision=0) # "Seed" -> "種子"
+                                    randomize_seed = gr.Checkbox(label="隨機化", value=True, info="為每個任務生成新的隨機種子") # "Randomize" -> "隨機化", info translated
+                                with gr.Accordion("LoRA 模型", open=False): # "LoRAs" -> "LoRA 模型"
+                                    with gr.Row():
+                                        lora_selector = gr.Dropdown(
+                                            choices=lora_names,
+                                            label="選擇要載入的 LoRA 模型", # "Select LoRAs to Load" -> "選擇要載入的 LoRA 模型"
+                                            multiselect=True,
+                                            value=[],
+                                            info="選擇一個或多個 LoRA 模型用於此任務" # "Select one or more LoRAs to use for this job" -> "選擇一個或多個 LoRA 模型用於此任務"
                                         )
-                            with gr.Accordion("Latent Image Options", open=False):
-                                latent_type = gr.Dropdown(
-                                    ["Black", "White", "Noise", "Green Screen"], label="Latent Image", value="Black", info="Used as a starting point if no image is provided"
-                                )
-                            with gr.Accordion("Advanced Parameters", open=False):
-                                latent_window_size = gr.Slider(label="Latent Window Size", minimum=1, maximum=33, value=9, step=1, visible=True, info='Change at your own risk, very experimental')  # Should not change
-                                cfg = gr.Slider(label="CFG Scale", minimum=1.0, maximum=32.0, value=1.0, step=0.01, visible=False)  # Should not change
-                                gs = gr.Slider(label="Distilled CFG Scale", minimum=1.0, maximum=32.0, value=10.0, step=0.01)
-                                rs = gr.Slider(label="CFG Re-Scale", minimum=0.0, maximum=1.0, value=0.0, step=0.01, visible=False)  # Should not change
-                                with gr.Row("TeaCache"):
-                                    use_teacache = gr.Checkbox(label='Use TeaCache', value=True, info='Faster speed, but often makes hands and fingers slightly worse.')
-                                    teacache_num_steps = gr.Slider(label="TeaCache steps", minimum=1, maximum=50, step=1, value=25, visible=True, info='How many intermediate sections to keep in the cache')
-                                    teacache_rel_l1_thresh = gr.Slider(label="TeaCache rel_l1_thresh", minimum=0.01, maximum=1.0, step=0.01, value=0.15, visible=True, info='Relative L1 Threshold')
-                                    use_teacache.change(lambda enabled: (gr.update(visible=enabled), gr.update(visible=enabled)), inputs=use_teacache, outputs=[teacache_num_steps, teacache_rel_l1_thresh])
-                            with gr.Row("Metadata"):
-                                json_upload = gr.File(
-                                    label="Upload Metadata JSON (optional)",
-                                    file_types=[".json"],
-                                    type="filepath",
-                                    height=140,
-                                )
+                                        lora_names_states = gr.State(lora_names)
+                                        lora_sliders = {}
+                                        for lora in lora_names:
+                                            lora_sliders[lora] = gr.Slider(
+                                                minimum=0.0, maximum=2.0, value=1.0, step=0.01,
+                                                label=f"{lora} 權重", visible=False, interactive=True # "{lora} Weight" -> "{lora} 權重"
+                                            )
+                                with gr.Accordion("潛在圖像選項", open=False): # "Latent Image Options" -> "潛在圖像選項"
+                                    latent_type = gr.Dropdown(
+                                        ["Black", "White", "Noise", "Green Screen"], label="潛在圖像", value="Black", info="如果未提供圖像，將作為起始點使用" # "Latent Image" -> "潛在圖像", info translated
+                                    )
+                                with gr.Accordion("進階參數", open=False): # "Advanced Parameters" -> "進階參數"
+                                    latent_window_size = gr.Slider(label="潛在視窗大小", minimum=1, maximum=33, value=9, step=1, visible=True, info='風險自負，非常實驗性') # "Latent Window Size" -> "潛在視窗大小", info translated
+                                    cfg = gr.Slider(label="CFG 比例", minimum=1.0, maximum=32.0, value=1.0, step=0.01, visible=False) # "CFG Scale" -> "CFG 比例"
+                                    gs = gr.Slider(label="蒸餾 CFG 比例", minimum=1.0, maximum=32.0, value=10.0, step=0.01) # "Distilled CFG Scale" -> "蒸餾 CFG 比例"
+                                    rs = gr.Slider(label="CFG 重新縮放", minimum=0.0, maximum=1.0, value=0.0, step=0.01, visible=False) # "CFG Re-Scale" -> "CFG 重新縮放"
+                                    with gr.Row("TeaCache"):
+                                        use_teacache = gr.Checkbox(label='使用 TeaCache', value=True, info='速度更快，但通常會讓手和手指稍微變差。') # "Use TeaCache" -> "使用 TeaCache", info translated
+                                        teacache_num_steps = gr.Slider(label="TeaCache 步數", minimum=1, maximum=50, step=1, value=25, visible=True, info='在快取中保留多少中間區塊') # "TeaCache steps" -> "TeaCache 步數", info translated
+                                        teacache_rel_l1_thresh = gr.Slider(label="TeaCache rel_l1_thresh", minimum=0.01, maximum=1.0, step=0.01, value=0.15, visible=True, info='相對 L1 閾值') # "TeaCache rel_l1_thresh" -> "TeaCache rel_l1_thresh", info translated
+                                        use_teacache.change(lambda enabled: (gr.update(visible=enabled), gr.update(visible=enabled)), inputs=use_teacache, outputs=[teacache_num_steps, teacache_rel_l1_thresh])
+                                with gr.Row("中繼資料"): # "Metadata" -> "中繼資料"
+                                    json_upload = gr.File(
+                                        label="上傳中繼資料 JSON (可選)", # "Upload Metadata JSON (optional)" -> "上傳中繼資料 JSON (可選)"
+                                        file_types=[".json"],
+                                        type="filepath",
+                                        height=140,
+                                    )
 
                     with gr.Column():
                         preview_image = gr.Image(
-                            label="Next Latents", 
+                            label="下一個潛在", # "Next Latents" -> "下一個潛在"
                             height=150, 
                             visible=True, 
                             type="numpy", 
@@ -550,32 +546,30 @@ def create_interface(
                             elem_classes="contain-image",
                             image_mode="RGB"
                         )
-                        result_video = gr.Video(label="Finished Frames", autoplay=True, show_share_button=False, height=256, loop=True)
+                        result_video = gr.Video(label="已完成幀", autoplay=True, show_share_button=False, height=256, loop=True) # "Finished Frames" -> "已完成幀"
                         progress_desc = gr.Markdown('', elem_classes='no-generating-animation')
                         progress_bar = gr.HTML('', elem_classes='no-generating-animation')
                         with gr.Row():
-                            current_job_id = gr.Textbox(label="Current Job ID", value="", visible=True, interactive=True)
-                            start_button = gr.Button(value="Add to Queue", variant="primary", elem_id="toolbar-add-to-queue-btn")
-                            xy_plot_process_btn = gr.Button("Submit", visible=False)
+                            current_job_id = gr.Textbox(label="當前任務 ID", value="", visible=True, interactive=True) # "Current Job ID" -> "當前任務 ID"
+                            start_button = gr.Button(value="加入佇列", variant="primary", elem_id="toolbar-add-to-queue-btn") # "Add to Queue" -> "加入佇列"
+                            xy_plot_process_btn = gr.Button("提交", visible=False) # "Submit" -> "提交"
                             video_input_required_message = gr.Markdown(
-                                "<p style='color: red; text-align: center;'>Input video required</p>", visible=False
+                                "<p style='color: red; text-align: center;'>需要輸入影片</p>", visible=False # "Input video required" -> "需要輸入影片"
                             )
-                            end_button = gr.Button(value="Cancel Current Job", interactive=True, visible=False)
+                            end_button = gr.Button(value="取消當前任務", interactive=True, visible=False) # "Cancel Current Job" -> "取消當前任務"
 
-           
-
-            with gr.Tab("Queue"):
+            with gr.Tab("佇列"): # "Queue" -> "佇列"
                 with gr.Row():
                     with gr.Column():
                         with gr.Row() as queue_controls_row:
-                            refresh_button = gr.Button("Refresh Queue")
-                            load_queue_button = gr.Button("Resume Queue")
-                            queue_export_button = gr.Button("Export Queue")
-                            clear_complete_button = gr.Button("Clear Completed Jobs", variant="secondary")
-                            clear_queue_button = gr.Button("Cancel Queued Jobs", variant="stop")
+                            refresh_button = gr.Button("重新整理佇列") # "Refresh Queue" -> "重新整理佇列"
+                            load_queue_button = gr.Button("繼續佇列") # "Resume Queue" -> "繼續佇列"
+                            queue_export_button = gr.Button("匯出佇列") # "Export Queue" -> "匯出佇列"
+                            clear_complete_button = gr.Button("清除已完成任務", variant="secondary") # "Clear Completed Jobs" -> "清除已完成任務"
+                            clear_queue_button = gr.Button("取消排隊任務", variant="stop") # "Cancel Queued Jobs" -> "取消排隊任務"
                         with gr.Row():
                             import_queue_file = gr.File(
-                                label="Import Queue",
+                                label="匯入佇列", # "Import Queue" -> "匯入佇列"
                                 file_types=[".json", ".zip"],
                                 type="filepath",
                                 visible=True,
@@ -583,30 +577,30 @@ def create_interface(
                             )
                         
                         with gr.Row(visible=False) as confirm_cancel_row:
-                            gr.Markdown("### Are you sure you want to cancel all pending jobs?")
-                            confirm_cancel_yes_btn = gr.Button("Yes, Cancel All", variant="stop")
-                            confirm_cancel_no_btn = gr.Button("No, Go Back")
+                            gr.Markdown("### 您確定要取消所有待處理的任務嗎？") # "Are you sure you want to cancel all pending jobs?" -> "您確定要取消所有待處理的任務嗎？"
+                            confirm_cancel_yes_btn = gr.Button("是，取消所有", variant="stop") # "Yes, Cancel All" -> "是，取消所有"
+                            confirm_cancel_no_btn = gr.Button("否，返回") # "No, Go Back" -> "否，返回"
 
                         with gr.Row():
                             queue_status = gr.DataFrame(
-                                headers=["Job ID", "Type", "Status", "Created", "Started", "Completed", "Elapsed", "Preview"], 
+                                headers=["任務 ID", "類型", "狀態", "建立時間", "開始時間", "完成時間", "耗時", "預覽"], # Headers translated
                                 datatype=["str", "str", "str", "str", "str", "str", "str", "html"], 
-                                label="Job Queue"
+                                label="任務佇列" # "Job Queue" -> "任務佇列"
                             )
 
-                        with gr.Accordion("Queue Documentation", open=False):
+                        with gr.Accordion("佇列說明文件", open=False): # "Queue Documentation" -> "佇列說明文件"
                             gr.Markdown("""
-                            ## Queue Tab Guide
+                            ## 佇列分頁指南
                             
-                            This tab is for managing your generation jobs.
+                            此分頁用於管理您的生成任務。
                             
-                            - **Refresh Queue**: Update the job list.
-                            - **Cancel Queue**: Stop all pending jobs.
-                            - **Clear Complete**: Remove finished, failed, or cancelled jobs from the list.
-                            - **Load Queue**: Load jobs from the default `queue.json`.
-                            - **Export Queue**: Save the current job list and its images to a zip file.
-                            - **Import Queue**: Load a queue from a `.json` or `.zip` file.
-                            """)
+                            - **重新整理佇列**: 更新任務列表。
+                            - **取消佇列**: 停止所有待處理的任務。
+                            - **清除已完成**: 從列表中移除已完成、失敗或已取消的任務。
+                            - **載入佇列**: 從預設的 `queue.json` 載入任務。
+                            - **匯出佇列**: 將當前任務列表及其圖像儲存為 zip 檔案。
+                            - **匯入佇列**: 從 `.json` 或 `.zip` 檔案載入佇列。
+                            """) # All markdown content translated
                         
                         # --- Event Handlers for Queue Tab ---
 
@@ -614,7 +608,7 @@ def create_interface(
                         def clear_all_jobs():
                             try:
                                 cancelled_count = job_queue.clear_queue()
-                                print(f"Cleared {cancelled_count} jobs from the queue")
+                                print(f"Cleared {cancelled_count} jobs from the queue") # Logging strings are kept in English for console output
                                 return update_stats()
                             except Exception as e:
                                 import traceback
@@ -703,7 +697,7 @@ def create_interface(
 
                         # Add CSS for thumbnails
                         
-            with gr.Tab("Outputs", id="outputs_tab"): # Ensure 'id' is present for tab switching
+            with gr.Tab("輸出", id="outputs_tab"): # "Outputs" -> "輸出"
                 outputDirectory_video = settings.get("output_dir", settings.default_settings['output_dir'])
                 outputDirectory_metadata = settings.get("metadata_dir", settings.default_settings['metadata_dir'])
                 def get_gallery_items():
@@ -743,7 +737,7 @@ def create_interface(
                     
                     if not video_file or not os.path.exists(os.path.join(outputDirectory_video, video_file)) or not os.path.exists(json_path):
                         # If video or info not found, button should be hidden
-                        return None, "Video or JSON not found.", gr.update(visible=False) 
+                        return None, "影片或 JSON 未找到。", gr.update(visible=False) # Translated "Video or JSON not found."
 
                     video_path = os.path.join(outputDirectory_video, video_file)
                     info_content = {"description": "no info"}
@@ -764,12 +758,12 @@ def create_interface(
                             object_fit="cover",
                             height="auto"
                         )
-                        refresh_button = gr.Button("Update")
+                        refresh_button = gr.Button("更新") # "Update" -> "更新"
                     with gr.Column(scale=5):
                         video_out = gr.Video(sources=[], autoplay=True, loop=True, visible=False)
                     with gr.Column(scale=1):
-                        info_out = gr.Textbox(label="Generation info", visible=False)
-                        send_to_toolbox_btn = gr.Button("➡️ Send to Post-processing", visible=False)  # Added new send_to_toolbox_btn
+                        info_out = gr.Textbox(label="生成資訊", visible=False) # "Generation info" -> "生成資訊"
+                        send_to_toolbox_btn = gr.Button("➡️ 送至後處理", visible=False) # "➡️ Send to Post-processing" -> "➡️ 送至後處理"
                     def refresh_gallery():
                         new_items = get_gallery_items()
                         return gr.update(value=[i[0] for i in new_items]), new_items
@@ -796,52 +790,50 @@ def create_interface(
                         inputs=[gallery_items_state],
                         outputs=[video_out, info_out, send_to_toolbox_btn, selected_original_video_path_state] # Output original path to State
                     )
-            with gr.Tab("Post-processing", id="toolbox_tab"):          
+            with gr.Tab("後處理", id="toolbox_tab"): # "Post-processing" -> "後處理"
                 # Call the function from toolbox_app.py to build the Toolbox UI
                 # The toolbox_ui_layout (e.g., a gr.Column) is automatically placed here.                
                 toolbox_ui_layout, tb_target_video_input = tb_create_video_toolbox_ui()
                 
-            with gr.Tab("Settings"):
+            with gr.Tab("設定"): # "Settings" -> "設定"
                 with gr.Row():
                     with gr.Column():
                         save_metadata = gr.Checkbox(
-                            label="Save Metadata", 
-                            info="Save to JSON file", 
+                            label="儲存中繼資料", # "Save Metadata" -> "儲存中繼資料"
+                            info="儲存為 JSON 檔案", # "Save to JSON file" -> "儲存為 JSON 檔案"
                             value=settings.get("save_metadata", 6),
                         )
                         gpu_memory_preservation = gr.Slider(
-                            label="Memory Buffer for Stability (VRAM GB)",
+                            label="記憶體緩衝區以保持穩定性 (VRAM GB)", # "Memory Buffer for Stability (VRAM GB)" -> "記憶體緩衝區以保持穩定性 (VRAM GB)"
                             minimum=1,
                             maximum=128,
                             step=0.1,
                             value=settings.get("gpu_memory_preservation", 6),
-                            info="Increase reserve if you see computer freezes, stagnant generation, or super slow sampling steps (try 1G at a time).\
-                                 Otherwise smaller buffer is faster. Some models and lora need more buffer than others. \
-                                 (5.5 - 8.5 is a common range)"
+                            info="如果看到電腦凍結、生成停滯或採樣步驟非常慢（每次嘗試 1G），請增加保留。否則較小的緩衝區速度更快。某些模型和 LoRA 比其他模型需要更多緩衝區。（5.5 - 8.5 是常見範圍）" # Info translated
                         )
                         mp4_crf = gr.Slider(
-                            label="MP4 Compression",
+                            label="MP4 壓縮率", # "MP4 Compression" -> "MP4 壓縮率"
                             minimum=0,
                             maximum=100,
                             step=1,
                             value=settings.get("mp4_crf", 16),
-                            info="Lower means better quality. 0 is uncompressed. Change to 16 if you get black outputs."
+                            info="數值越低表示品質越好。0 為無壓縮。如果輸出為黑色，請更改為 16。" # Info translated
                         )
                         clean_up_videos = gr.Checkbox(
-                            label="Clean up video files",
+                            label="清理影片檔案", # "Clean up video files" -> "清理影片檔案"
                             value=settings.get("clean_up_videos", True),
-                            info="If checked, only the final video will be kept after generation."
+                            info="如果勾選，生成後只會保留最終影片。" # Info translated
                         )
                         cleanup_temp_folder = gr.Checkbox(
-                            label="Clean up temp folder after generation",
+                            label="生成後清理暫存資料夾", # "Clean up temp folder after generation" -> "生成後清理暫存資料夾"
                             visible=False,
                             value=settings.get("cleanup_temp_folder", True),
-                            info="If checked, temporary files will be cleaned up after each generation."
+                            info="如果勾選，每次生成後將清理暫存檔案。" # Info translated
                         )
                         
                         # gr.Markdown("---")
                         # gr.Markdown("### Startup Settings")
-                        gr.Markdown("") 
+                        gr.Markdown("")  
                         # Initial values for startup preset dropdown
                         # Ensure settings and load_presets are available in this scope
                         initial_startup_model_val = settings.get("startup_model_type", "None")
@@ -856,73 +848,73 @@ def create_interface(
                                 initial_startup_preset_value_val = saved_preset_for_initial_model_val
                         
                         startup_model_type_dropdown = gr.Dropdown(
-                            label="Startup Model Type",
-                            choices=["None"] + [choice[0] for choice in model_type.choices if choice[0] != "XY Plot"], # model_type is the Radio on Generate tab
+                            label="啟動模型類型", # "Startup Model Type" -> "啟動模型類型"
+                            choices=["無"] + [choice[0] for choice in model_type.choices if choice[0] != "XY Plot"], # "None" -> "無"
                             value=initial_startup_model_val,
-                            info="Select a model type to load on startup. 'None' to disable."
+                            info="選擇在啟動時載入的模型類型。'無' 以禁用。" # Info translated, "None" -> "無"
                         )
                         startup_preset_name_dropdown = gr.Dropdown(
-                            label="Startup Preset",
+                            label="啟動預設", # "Startup Preset" -> "啟動預設"
                             choices=initial_startup_presets_choices_val,
                             value=initial_startup_preset_value_val,
-                            info="Select a preset for the startup model. Updates when Startup Model Type changes.",
+                            info="為啟動模型選擇一個預設。當啟動模型類型改變時更新。", # Info translated
                             interactive=True # Must be interactive to be updated by another component
                         )
 
-                        with gr.Accordion("System Prompt", open=False):
+                        with gr.Accordion("系統提示詞", open=False): # "System Prompt" -> "系統提示詞"
                             with gr.Row(equal_height=True): # New Row to contain checkbox and reset button
                                 override_system_prompt = gr.Checkbox(
-                                    label="Override System Prompt",
+                                    label="覆寫系統提示詞", # "Override System Prompt" -> "覆寫系統提示詞"
                                     value=settings.get("override_system_prompt", False),
-                                    info="If checked, the system prompt template below will be used instead of the default one.",
+                                    info="如果勾選，將使用下面的系統提示詞模板而不是預設模板。", # Info translated
                                     scale=1 # Give checkbox some scale
                                 )
                                 reset_system_prompt_btn = gr.Button(
-                                    "Reset",
+                                    "重置", # "Reset" -> "重置"
                                     scale=0
                                 )
                             system_prompt_template = gr.Textbox(
-                                label="System Prompt Template",
+                                label="系統提示詞模板", # "System Prompt Template" -> "系統提示詞模板"
                                 value=settings.get("system_prompt_template", "{\"template\": \"<|start_header_id|>system<|end_header_id|>\\n\\nDescribe the video by detailing the following aspects: 1. The main content and theme of the video.2. The color, shape, size, texture, quantity, text, and spatial relationships of the objects.3. Actions, events, behaviors temporal relationships, physical movement changes of the objects.4. background environment, light, style and atmosphere.5. camera angles, movements, and transitions used in the video:<|eot_id|><|start_header_id|>user<|end_header_id|>\\n\\n{}<|eot_id|>\", \"crop_start\": 95}"),
                                 lines=10,
-                                info="System prompt template used for video generation. Must be a valid JSON or Python dictionary string with 'template' and 'crop_start' keys. Example: {\"template\": \"your template here\", \"crop_start\": 95}"
+                                info="用於影片生成的系統提示詞模板。必須是有效的 JSON 或 Python 字典字串，包含 'template' 和 'crop_start' 鍵。範例：{\"template\": \"您的模板在此\", \"crop_start\": 95}" # Info translated
                             )
                             # The reset_system_prompt_btn is now defined above within the Row
 
                         # --- Settings Tab Event Handlers ---
 
                         output_dir = gr.Textbox(
-                            label="Output Directory",
+                            label="輸出目錄", # "Output Directory" -> "輸出目錄"
                             value=settings.get("output_dir"),
-                            placeholder="Path to save generated videos"
+                            placeholder="儲存生成影片的路徑" # Placeholder translated
                         )
                         metadata_dir = gr.Textbox(
-                            label="Metadata Directory",
+                            label="中繼資料目錄", # "Metadata Directory" -> "中繼資料目錄"
                             value=settings.get("metadata_dir"),
-                            placeholder="Path to save metadata files"
+                            placeholder="儲存中繼資料檔案的路徑" # Placeholder translated
                         )
                         lora_dir = gr.Textbox(
-                            label="LoRA Directory",
+                            label="LoRA 目錄", # "LoRA Directory" -> "LoRA 目錄"
                             value=settings.get("lora_dir"),
-                            placeholder="Path to LoRA models"
+                            placeholder="LoRA 模型路徑" # Placeholder translated
                         )
-                        gradio_temp_dir = gr.Textbox(label="Gradio Temporary Directory", value=settings.get("gradio_temp_dir"))
+                        gradio_temp_dir = gr.Textbox(label="Gradio 暫存目錄", value=settings.get("gradio_temp_dir")) # "Gradio Temporary Directory" -> "Gradio 暫存目錄"
                         auto_save = gr.Checkbox(
-                            label="Auto-save settings",
+                            label="自動儲存設定", # "Auto-save settings" -> "自動儲存設定"
                             value=settings.get("auto_save_settings", True)
                         )
                         # Add Gradio Theme Dropdown
                         gradio_themes = ["default", "base", "soft", "glass", "mono", "origin", "citrus", "monochrome", "ocean", "NoCrypt/miku", "earneleh/paris", "gstaff/xkcd"]
                         theme_dropdown = gr.Dropdown(
-                            label="Theme",
+                            label="主題", # "Theme" -> "主題"
                             choices=gradio_themes,
                             value=settings.get("gradio_theme", "default"),
-                            info="Select the Gradio UI theme. Requires restart."
+                            info="選擇 Gradio UI 主題。需要重新啟動。" # Info translated
                         )
-                        save_btn = gr.Button("Save Settings")
-                        cleanup_btn = gr.Button("Clean Up Temporary Files")
+                        save_btn = gr.Button("儲存設定") # "Save Settings" -> "儲存設定"
+                        cleanup_btn = gr.Button("清理暫存檔案") # "Clean Up Temporary Files" -> "清理暫存檔案"
                         status = gr.HTML("")
-                        cleanup_output = gr.Textbox(label="Cleanup Status", interactive=False)
+                        cleanup_output = gr.Textbox(label="清理狀態", interactive=False) # "Cleanup Status" -> "清理狀態"
 
                         def save_settings(save_metadata, gpu_memory_preservation, mp4_crf, clean_up_videos, cleanup_temp_folder, override_system_prompt_value, system_prompt_template_value, output_dir, metadata_dir, lora_dir, gradio_temp_dir, auto_save, selected_theme, startup_model_type_val, startup_preset_name_val):
                             """Handles the manual 'Save Settings' button click."""
@@ -957,9 +949,9 @@ def create_interface(
                                 # settings.save_settings() is called inside settings.save_settings if auto_save is true,
                                 # but for the manual button, we ensure it saves regardless of the auto_save flag's previous state.
                                 # The call above to settings.save_settings already handles writing to disk.
-                                return "<p style='color:green;'>Settings saved successfully! Restart required for theme change.</p>"
+                                return "<p style='color:green;'>設定已成功儲存！主題變更需要重新啟動。</p>" # Translated
                             except Exception as e:
-                                return f"<p style='color:red;'>Error saving settings: {str(e)}</p>"
+                                return f"<p style='color:red;'>儲存設定時發生錯誤：{str(e)}</p>" # Translated
 
                         def handle_individual_setting_change(key, value, setting_name_for_ui):
                             """Called by .change() and .submit() events of individual setting components."""
@@ -974,17 +966,17 @@ def create_interface(
                                 settings.save_settings()
                                 # 3. Provide feedback.
                                 if value is True:
-                                    return f"<p style='color:green;'>'{setting_name_for_ui}' setting is now ON and saved.</p>"
+                                    return f"<p style='color:green;'>'{setting_name_for_ui}' 設定已開啟並儲存。</p>" # Translated
                                 else:
-                                    return f"<p style='color:green;'>'{setting_name_for_ui}' setting is now OFF and saved.</p>"
+                                    return f"<p style='color:green;'>'{setting_name_for_ui}' 設定已關閉並儲存。</p>" # Translated
                             else:
                                 # For all other settings:
                                 # Let settings.set() handle the auto-save logic based on the current "auto_save_settings" value.
                                 settings.set(key, value) # settings.set() will call save_settings() if auto_save is True
                                 if settings.get("auto_save_settings"): # Check the current state of auto_save
-                                    return f"<p style='color:blue;'>'{setting_name_for_ui}' setting auto-saved.</p>"
+                                    return f"<p style='color:blue;'>'{setting_name_for_ui}' 設定已自動儲存。</p>" # Translated
                                 else:
-                                    return f"<p style='color:gray;'>'{setting_name_for_ui}' setting changed (auto-save is off, click 'Save Settings').</p>"
+                                    return f"<p style='color:gray;'>'{setting_name_for_ui}' 設定已變更（自動儲存已關閉，請點擊「儲存設定」）。</p>" # Translated
 
                         save_btn.click(
                             fn=save_settings,
@@ -999,14 +991,14 @@ def create_interface(
                             fn=reset_system_prompt_template_value,
                             outputs=[system_prompt_template, override_system_prompt]
                         ).then( # Trigger auto-save for the reset values if auto-save is on
-                            lambda val_template, val_override: handle_individual_setting_change("system_prompt_template", val_template, "System Prompt Template") or handle_individual_setting_change("override_system_prompt", val_override, "Override System Prompt"),
+                            lambda val_template, val_override: handle_individual_setting_change("system_prompt_template", val_template, "系統提示詞模板") or handle_individual_setting_change("override_system_prompt", val_override, "覆寫系統提示詞"), # Translated
                             inputs=[system_prompt_template, override_system_prompt], outputs=[status])
 
                         def cleanup_temp_files():
                             """Clean up temporary files and folders in the Gradio temp directory"""
                             temp_dir = settings.get("gradio_temp_dir")
                             if not temp_dir or not os.path.exists(temp_dir):
-                                return "No temporary directory found or directory does not exist."
+                                return "找不到暫存目錄或目錄不存在。" # Translated "No temporary directory found or directory does not exist."
                             
                             try:
                                 # Get all items in the temp directory
@@ -1027,32 +1019,32 @@ def create_interface(
                                     except Exception as e:
                                         print(f"Error removing {item_path}: {e}")
                                 
-                                return f"Cleaned up {removed_count} temporary files/folders."
+                                return f"已清理 {removed_count} 個暫存檔案/資料夾。" # Translated "Cleaned up {removed_count} temporary files/folders."
                             except Exception as e:
-                                return f"Error cleaning up temporary files: {str(e)}"
+                                return f"清理暫存檔案時發生錯誤：{str(e)}" # Translated "Error cleaning up temporary files: {str(e)}"
 
                         # Add .change handlers for auto-saving individual settings
-                        save_metadata.change(lambda v: handle_individual_setting_change("save_metadata", v, "Save Metadata"), inputs=[save_metadata], outputs=[status])
-                        gpu_memory_preservation.change(lambda v: handle_individual_setting_change("gpu_memory_preservation", v, "GPU Memory Preservation"), inputs=[gpu_memory_preservation], outputs=[status])
-                        mp4_crf.change(lambda v: handle_individual_setting_change("mp4_crf", v, "MP4 Compression"), inputs=[mp4_crf], outputs=[status])
-                        clean_up_videos.change(lambda v: handle_individual_setting_change("clean_up_videos", v, "Clean Up Videos"), inputs=[clean_up_videos], outputs=[status])
+                        save_metadata.change(lambda v: handle_individual_setting_change("save_metadata", v, "儲存中繼資料"), inputs=[save_metadata], outputs=[status]) # Translated
+                        gpu_memory_preservation.change(lambda v: handle_individual_setting_change("gpu_memory_preservation", v, "GPU 記憶體保留"), inputs=[gpu_memory_preservation], outputs=[status]) # Translated
+                        mp4_crf.change(lambda v: handle_individual_setting_change("mp4_crf", v, "MP4 壓縮"), inputs=[mp4_crf], outputs=[status]) # Translated
+                        clean_up_videos.change(lambda v: handle_individual_setting_change("clean_up_videos", v, "清理影片"), inputs=[clean_up_videos], outputs=[status]) # Translated
 
                         # This setting is not visible in the UI, but still handle it in case it's re-added to the UI
-                        cleanup_temp_folder.change(lambda v: handle_individual_setting_change("cleanup_temp_folder", v, "Cleanup Temp Folder"), inputs=[cleanup_temp_folder], outputs=[status])
+                        cleanup_temp_folder.change(lambda v: handle_individual_setting_change("cleanup_temp_folder", v, "清理暫存資料夾"), inputs=[cleanup_temp_folder], outputs=[status]) # Translated
 
-                        override_system_prompt.change(lambda v: handle_individual_setting_change("override_system_prompt", v, "Override System Prompt"), inputs=[override_system_prompt], outputs=[status])
+                        override_system_prompt.change(lambda v: handle_individual_setting_change("override_system_prompt", v, "覆寫系統提示詞"), inputs=[override_system_prompt], outputs=[status]) # Translated
                         # Using .blur for text changes so they are processed after the user finishes, not on every keystroke
-                        system_prompt_template.blur(lambda v: handle_individual_setting_change("system_prompt_template", v, "System Prompt Template"), inputs=[system_prompt_template], outputs=[status])
+                        system_prompt_template.blur(lambda v: handle_individual_setting_change("system_prompt_template", v, "系統提示詞模板"), inputs=[system_prompt_template], outputs=[status]) # Translated
                         # reset_system_prompt_btn # is handled separately above, on click
                         
                         # Using .blur for text changes so they are processed after the user finishes, not on every keystroke
-                        output_dir.blur(lambda v: handle_individual_setting_change("output_dir", v, "Output Directory"), inputs=[output_dir], outputs=[status])
-                        metadata_dir.blur(lambda v: handle_individual_setting_change("metadata_dir", v, "Metadata Directory"), inputs=[metadata_dir], outputs=[status])
-                        lora_dir.blur(lambda v: handle_individual_setting_change("lora_dir", v, "LoRA Directory"), inputs=[lora_dir], outputs=[status])
-                        gradio_temp_dir.blur(lambda v: handle_individual_setting_change("gradio_temp_dir", v, "Gradio Temporary Directory"), inputs=[gradio_temp_dir], outputs=[status])
+                        output_dir.blur(lambda v: handle_individual_setting_change("output_dir", v, "輸出目錄"), inputs=[output_dir], outputs=[status]) # Translated
+                        metadata_dir.blur(lambda v: handle_individual_setting_change("metadata_dir", v, "中繼資料目錄"), inputs=[metadata_dir], outputs=[status]) # Translated
+                        lora_dir.blur(lambda v: handle_individual_setting_change("lora_dir", v, "LoRA 目錄"), inputs=[lora_dir], outputs=[status]) # Translated
+                        gradio_temp_dir.blur(lambda v: handle_individual_setting_change("gradio_temp_dir", v, "Gradio 暫存目錄"), inputs=[gradio_temp_dir], outputs=[status]) # Translated
                         
-                        auto_save.change(lambda v: handle_individual_setting_change("auto_save_settings", v, "Auto-save Settings"), inputs=[auto_save], outputs=[status])
-                        theme_dropdown.change(lambda v: handle_individual_setting_change("gradio_theme", v, "Theme"), inputs=[theme_dropdown], outputs=[status])
+                        auto_save.change(lambda v: handle_individual_setting_change("auto_save_settings", v, "自動儲存設定"), inputs=[auto_save], outputs=[status]) # Translated
+                        theme_dropdown.change(lambda v: handle_individual_setting_change("gradio_theme", v, "主題"), inputs=[theme_dropdown], outputs=[status]) # Translated
 
                         # Event handlers for startup settings
                         def update_startup_preset_dropdown_choices(selected_startup_model_type_from_ui):
@@ -1073,11 +1065,11 @@ def create_interface(
                             return gr.update(choices=loaded_presets_for_model, value=value_to_select)
 
                         startup_model_type_dropdown.change(
-                            fn=lambda v: handle_individual_setting_change("startup_model_type", v, "Startup Model Type"), 
+                            fn=lambda v: handle_individual_setting_change("startup_model_type", v, "啟動模型類型"), # Translated
                             inputs=[startup_model_type_dropdown], outputs=[status]
                         ).then( # Chain the update to the preset dropdown
                             fn=update_startup_preset_dropdown_choices, inputs=[startup_model_type_dropdown], outputs=[startup_preset_name_dropdown])
-                        startup_preset_name_dropdown.change(lambda v: handle_individual_setting_change("startup_preset_name", v, "Startup Preset Name"), inputs=[startup_preset_name_dropdown], outputs=[status])
+                        startup_preset_name_dropdown.change(lambda v: handle_individual_setting_change("startup_preset_name", v, "啟動預設名稱"), inputs=[startup_preset_name_dropdown], outputs=[status]) # Translated
 
         # --- Event Handlers and Connections (Now correctly indented) ---
 
@@ -1143,7 +1135,7 @@ def create_interface(
              resolutionW_arg, resolutionH_arg,
              combine_with_source_arg, 
              num_cleaned_frames_arg,
-             lora_names_states_arg,   # This is from lora_names_states (gr.State)
+             lora_names_states_arg,    # This is from lora_names_states (gr.State)
              *lora_slider_values_tuple # Remaining args are LoRA slider values
             ) = args
             # DO NOT parse the prompt here. Parsing happens once in the worker.
@@ -1175,17 +1167,17 @@ def create_interface(
             # Call the process function with all arguments
             # Pass the backend_model_type and the ORIGINAL prompt_text string to the backend process function
             result = process_fn(backend_model_type, input_data, actual_end_frame_image_for_backend, actual_end_frame_strength_for_backend,
-                                prompt_text_arg, n_prompt_arg, seed_arg, total_second_length_arg,
-                                latent_window_size_arg, steps_arg, cfg_arg, gs_arg, rs_arg,
-                                use_teacache_arg, teacache_num_steps_arg, teacache_rel_l1_thresh_arg,
-                                blend_sections_arg, latent_type_arg, clean_up_videos_arg, # clean_up_videos_arg is from UI
-                                selected_loras_arg, resolutionW_arg, resolutionH_arg, 
-                                input_image_path, 
-                                combine_with_source_arg,
-                                num_cleaned_frames_arg,
-                                lora_names_states_arg,
-                                *lora_slider_values_tuple
-                               )
+                                 prompt_text_arg, n_prompt_arg, seed_arg, total_second_length_arg,
+                                 latent_window_size_arg, steps_arg, cfg_arg, gs_arg, rs_arg,
+                                 use_teacache_arg, teacache_num_steps_arg, teacache_rel_l1_thresh_arg,
+                                 blend_sections_arg, latent_type_arg, clean_up_videos_arg, # clean_up_videos_arg is from UI
+                                 selected_loras_arg, resolutionW_arg, resolutionH_arg, 
+                                 input_image_path, 
+                                 combine_with_source_arg,
+                                 num_cleaned_frames_arg,
+                                 lora_names_states_arg,
+                                 *lora_slider_values_tuple
+                                )
             # If randomize_seed is checked, generate a new random seed for the next job
             new_seed_value = None
             if randomize_seed_arg:
@@ -1194,7 +1186,7 @@ def create_interface(
 
             # Create the button update for start_button WITHOUT interactive=True.
             # The interactivity will be set by update_start_button_state later in the chain.
-            start_button_update_after_add = gr.update(value="Add to Queue")
+            start_button_update_after_add = gr.update(value="加入佇列") # Translated
             
             # If a job ID was created, automatically start monitoring it and update queue
             if result and result[1]:  # Check if job_id exists in results
@@ -1233,7 +1225,7 @@ def create_interface(
             
             # Change the cancel button text to "Cancelling..." and make it non-interactive
             # This ensures the button stays in this state until the job is fully cancelled
-            return queue_status_data, queue_stats_text, gr.update(value="Cancelling...", interactive=False), gr.update(value=None)
+            return queue_status_data, queue_stats_text, gr.update(value="取消中...", interactive=False), gr.update(value=None) # Translated "Cancelling..."
 
         # MODIFIED handle_send_video_to_toolbox:
         def handle_send_video_to_toolbox(original_path_from_state): # Input is now the original path from gr.State
@@ -1258,32 +1250,32 @@ def create_interface(
         # --- Inputs Lists ---
         # --- Inputs for all models ---
         ips = [
-            input_image,                # Corresponds to input_image_arg
-            input_video,                # Corresponds to input_video_arg
-            end_frame_image_original,   # Corresponds to end_frame_image_original_arg
-            end_frame_strength_original,# Corresponds to end_frame_strength_original_arg
-            prompt,                     # Corresponds to prompt_text_arg
-            n_prompt,                   # Corresponds to n_prompt_arg
-            seed,                       # Corresponds to seed_arg
-            randomize_seed,             # Corresponds to randomize_seed_arg
-            total_second_length,        # Corresponds to total_second_length_arg
-            latent_window_size,         # Corresponds to latent_window_size_arg
-            steps,                      # Corresponds to steps_arg
-            cfg,                        # Corresponds to cfg_arg
-            gs,                         # Corresponds to gs_arg
-            rs,                         # Corresponds to rs_arg
-            use_teacache,               # Corresponds to use_teacache_arg
-            teacache_num_steps,         # Corresponds to teacache_num_steps_arg
-            teacache_rel_l1_thresh,     # Corresponds to teacache_rel_l1_thresh_arg
-            blend_sections,             # Corresponds to blend_sections_arg
-            latent_type,                # Corresponds to latent_type_arg
-            clean_up_videos,            # Corresponds to clean_up_videos_arg (UI checkbox)
-            lora_selector,              # Corresponds to selected_loras_arg
-            resolutionW,                # Corresponds to resolutionW_arg
-            resolutionH,                # Corresponds to resolutionH_arg
-            combine_with_source,        # Corresponds to combine_with_source_arg
-            num_cleaned_frames,         # Corresponds to num_cleaned_frames_arg
-            lora_names_states           # Corresponds to lora_names_states_arg
+            input_image,                 # Corresponds to input_image_arg
+            input_video,                 # Corresponds to input_video_arg
+            end_frame_image_original,    # Corresponds to end_frame_image_original_arg
+            end_frame_strength_original, # Corresponds to end_frame_strength_original_arg
+            prompt,                      # Corresponds to prompt_text_arg
+            n_prompt,                    # Corresponds to n_prompt_arg
+            seed,                        # Corresponds to seed_arg
+            randomize_seed,              # Corresponds to randomize_seed_arg
+            total_second_length,         # Corresponds to total_second_length_arg
+            latent_window_size,          # Corresponds to latent_window_size_arg
+            steps,                       # Corresponds to steps_arg
+            cfg,                         # Corresponds to cfg_arg
+            gs,                          # Corresponds to gs_arg
+            rs,                          # Corresponds to rs_arg
+            use_teacache,                # Corresponds to use_teacache_arg
+            teacache_num_steps,          # Corresponds to teacache_num_steps_arg
+            teacache_rel_l1_thresh,      # Corresponds to teacache_rel_l1_thresh_arg
+            blend_sections,              # Corresponds to blend_sections_arg
+            latent_type,                 # Corresponds to latent_type_arg
+            clean_up_videos,             # Corresponds to clean_up_videos_arg (UI checkbox)
+            lora_selector,               # Corresponds to selected_loras_arg
+            resolutionW,                 # Corresponds to resolutionW_arg
+            resolutionH,                 # Corresponds to resolutionH_arg
+            combine_with_source,         # Corresponds to combine_with_source_arg
+            num_cleaned_frames,          # Corresponds to num_cleaned_frames_arg
+            lora_names_states            # Corresponds to lora_names_states_arg
         ]
         # Add LoRA sliders to the input list
         ips.extend([lora_sliders[lora] for lora in lora_names])
@@ -1310,22 +1302,22 @@ def create_interface(
                 # This might happen if the event is triggered in an unexpected way
                 print(f"Warning: update_start_button_state received {len(args)} args, expected at least 2.")
                 # Default to a safe state (button disabled)
-                return gr.Button(value="Error", interactive=False), gr.update(visible=True)
+                return gr.Button(value="錯誤", interactive=False), gr.update(visible=True) # Translated "Error"
 
             video_provided = input_video_value is not None
             
             if is_video_model(selected_model) and not video_provided:
                 # Video model selected, but no video provided
-                return gr.Button(value="Missing Video", interactive=False), gr.update(visible=True)
+                return gr.Button(value="缺少影片", interactive=False), gr.update(visible=True) # Translated "Missing Video"
             else:
                 # Either not a video model, or video model selected and video provided
-                return gr.update(value="Add to Queue", interactive=True), gr.update(visible=False)
+                return gr.update(value="加入佇列", interactive=True), gr.update(visible=False) # Translated "Add to Queue"
         # Function to update button state before processing
         def update_button_before_processing(selected_model, *args):
             # First update the button to show "Adding..." and disable it
             # Also return current stats so they don't get blanked out during the "Adding..." phase
             qs_data, qs_text = update_stats()
-            return gr.update(), gr.update(), gr.update(), gr.update(), gr.update(), gr.update(value="Adding...", interactive=False), gr.update(), qs_data, qs_text, gr.update(), gr.update() # Added update for video_input_required_message
+            return gr.update(), gr.update(), gr.update(), gr.update(), gr.update(), gr.update(value="加入中...", interactive=False), gr.update(), qs_data, qs_text, gr.update(), gr.update() # Translated "Adding..."
         
         # Connect the start button to first update its state
         start_button.click(
@@ -1386,7 +1378,6 @@ def create_interface(
         # --- END OF REFACTORED XY PLOT EVENT WIRING ---
 
 
-
         # MODIFIED: on_model_type_change to handle new "XY Plot" option
         def on_model_type_change(selected_model):
             is_xy_plot = selected_model == "XY Plot"
@@ -1394,14 +1385,14 @@ def create_interface(
             shows_end_frame = selected_model in ["Original with Endframe", "Video with Endframe"]
 
             return (
-                gr.update(visible=not is_xy_plot),  # standard_generation_group
-                gr.update(visible=is_xy_plot),      # xy_group
-                gr.update(visible=not is_xy_plot and not is_ui_video_model_flag),  # image_input_group
-                gr.update(visible=not is_xy_plot and is_ui_video_model_flag),      # video_input_group
-                gr.update(visible=not is_xy_plot and shows_end_frame),     # end_frame_group_original
+                gr.update(visible=not is_xy_plot),   # standard_generation_group
+                gr.update(visible=is_xy_plot),       # xy_group
+                gr.update(visible=not is_xy_plot and not is_ui_video_model_flag),   # image_input_group
+                gr.update(visible=not is_xy_plot and is_ui_video_model_flag),       # video_input_group
+                gr.update(visible=not is_xy_plot and shows_end_frame),      # end_frame_group_original
                 gr.update(visible=not is_xy_plot and shows_end_frame),      # end_frame_slider_group
                 gr.update(visible=not is_xy_plot),   # start_button
-                gr.update(visible=is_xy_plot)       # xy_plot_process_btn
+                gr.update(visible=is_xy_plot)        # xy_plot_process_btn
             )
 
         # Model change listener
@@ -1438,7 +1429,6 @@ def create_interface(
         )
 
         
-
         # Auto-monitor the current job when job_id changes
         current_job_id.change(
             fn=monitor_fn,
@@ -1518,11 +1508,11 @@ def create_interface(
             # Need to handle potential missing keys if lora_names changes dynamically
             # lora_names is from the create_interface scope
             for lora_name_key in lora_names: # Iterate using lora_names to maintain order
-                 if lora_name_key == DUMMY_LORA_NAME: # Check for dummy LoRA
-                     updates.append(gr.update(visible=False))
-                 else:
-                     # Visibility of sliders should be based on actual_selected_loras_for_display
-                     updates.append(gr.update(visible=(lora_name_key in actual_selected_loras_for_display)))
+                    if lora_name_key == DUMMY_LORA_NAME: # Check for dummy LoRA
+                        updates.append(gr.update(visible=False))
+                    else:
+                        # Visibility of sliders should be based on actual_selected_loras_for_display
+                        updates.append(gr.update(visible=(lora_name_key in actual_selected_loras_for_display)))
             return updates # This list will be correctly ordered
 
         # Connect the dropdown to the sliders
@@ -1638,7 +1628,7 @@ def create_interface(
         }
         
         model_type.change(
-            fn=lambda mt: (gr.update(choices=load_presets(mt)), gr.update(label=f"{mt} Presets")),
+            fn=lambda mt: (gr.update(choices=load_presets(mt)), gr.update(label=f"{mt} 預設")), # Translated
             inputs=[model_type],
             outputs=[preset_dropdown, preset_accordion]
         )
@@ -1700,7 +1690,7 @@ def create_interface(
             preset_name_textbox_update = gr.update()
             
             # ui_components is now defined
-            ui_components_updates_list = [gr.update() for _ in ui_components] 
+            ui_components_updates_list = [gr.update() for _ in ui_components]  
 
             if startup_model_val and startup_model_val != "None":
                 model_type_update = gr.update(value=startup_model_val)
@@ -1714,21 +1704,21 @@ def create_interface(
                     preset_name_textbox_update = gr.update(value=startup_preset_val)
                     
                     # apply_preset is now defined
-                    ui_components_updates_list = apply_preset(startup_preset_val, startup_model_val) 
+                    ui_components_updates_list = apply_preset(startup_preset_val, startup_model_val)  
             
             return tuple([model_type_update, preset_dropdown_update, preset_name_textbox_update] + ui_components_updates_list)
 
 
         # --- Auto-refresh for Toolbar System Stats Monitor (Timer) ---
-        main_toolbar_system_stats_timer = gr.Timer(2, active=True) 
+        main_toolbar_system_stats_timer = gr.Timer(2, active=True)  
         
         main_toolbar_system_stats_timer.tick(
             fn=tb_get_formatted_toolbar_stats, # Function imported from toolbox_app.py
-            inputs=None, 
+            inputs=None,  
             outputs=[ # Target the Textbox components
                 toolbar_ram_display_component,
                 toolbar_vram_display_component,
-                toolbar_gpu_display_component 
+                toolbar_gpu_display_component  
             ]
         )
         
@@ -1855,17 +1845,25 @@ def create_interface(
                 for job in jobs:
                     if hasattr(job, 'status'):
                         status = str(job.status) # Use str() for safety
-                        if status in status_counts:
-                            status_counts[status] += 1
+                        if status == "JobStatus.PENDING":
+                            status_counts["QUEUED"] += 1
+                        elif status == "JobStatus.RUNNING":
+                            status_counts["RUNNING"] += 1
+                        elif status == "JobStatus.COMPLETED":
+                            status_counts["COMPLETED"] += 1
+                        elif status == "JobStatus.FAILED":
+                            status_counts["FAILED"] += 1
+                        elif status == "JobStatus.CANCELLED":
+                            status_counts["CANCELLED"] += 1
 
                 # Format the display text
-                stats_text = f"Queue: {status_counts['QUEUED']} | Running: {status_counts['RUNNING']} | Completed: {status_counts['COMPLETED']} | Failed: {status_counts['FAILED']} | Cancelled: {status_counts['CANCELLED']}"
+                stats_text = f"佇列: {status_counts['QUEUED']} | 運行中: {status_counts['RUNNING']} | 已完成: {status_counts['COMPLETED']} | 失敗: {status_counts['FAILED']} | 已取消: {status_counts['CANCELLED']}" # Translated
 
                 return f"<p style='margin:0;color:white;'>{stats_text}</p>"
 
             except Exception as e:
                 print(f"Error getting queue stats: {e}")
-                return "<p style='margin:0;color:white;'>Error loading queue stats</p>"
+                return "<p style='margin:0;color:white;'>載入佇列狀態時發生錯誤</p>" # Translated "Error loading queue stats"
 
         # Add footer with social links
         with gr.Row(elem_id="footer"):
@@ -1875,7 +1873,7 @@ def create_interface(
                     <div style="margin-top: 10px;">
                         <span class="footer-version" style="margin: 0 10px; color: #666;">{APP_VERSION_DISPLAY}</span>
                         <a href="https://patreon.com/Colinu" target="_blank" style="margin: 0 10px; color: #666; text-decoration: none;" class="footer-patreon">
-                            <i class="fab fa-patreon"></i>Support on Patreon
+                            <i class="fab fa-patreon"></i>在 Patreon 上支持
                         </a>
                         <a href="https://discord.gg/MtuM7gFJ3V" target="_blank" style="margin: 0 10px; color: #666; text-decoration: none;">
                             <i class="fab fa-discord"></i> Discord
@@ -1890,154 +1888,154 @@ def create_interface(
         # Add CSS for footer
 
         # gr.HTML("""
-            # <script>
-            # (function() {
-                # "use strict";
-                # console.log("Stat Bar Script: Initializing");
+        #     <script>
+        #     (function() {
+        #         "use strict";
+        #         console.log("Stat Bar Script: Initializing");
 
-                # const statConfig = {
-                    # ram: { selector: '#toolbar-ram-stat', regex: /\((\d+)%\)/, valueIndex: 1, isRawPercentage: true },
-                    # vram: { selector: '#toolbar-vram-stat', regex: /VRAM: (\d+\.?\d+)\/(\d+\.?\d+)GB/, usedIndex: 1, totalIndex: 2, isRawPercentage: false },
-                    # gpu: { selector: '#toolbar-gpu-stat', regex: /GPU: \d+°C (\d+)%/, valueIndex: 1, isRawPercentage: true }
-                # };
+        #         const statConfig = {
+        #             ram: { selector: '#toolbar-ram-stat', regex: /\((\d+)%\)/, valueIndex: 1, isRawPercentage: true },
+        #             vram: { selector: '#toolbar-vram-stat', regex: /VRAM: (\d+\.?\d+)\/(\d+\.?\d+)GB/, usedIndex: 1, totalIndex: 2, isRawPercentage: false },
+        #             gpu: { selector: '#toolbar-gpu-stat', regex: /GPU: \d+°C (\d+)%/, valueIndex: 1, isRawPercentage: true }
+        #         };
 
-                # function setBarPercentage(statElement, percentage) {
-                    # if (!statElement) {
-                        # console.warn("Stat Bar Script: setBarPercentage called with no element.");
-                        # return;
-                    # }
-                    # let bar = statElement.querySelector('.stat-bar');
-                    # if (!bar) {
-                        # console.log("Stat Bar Script: Creating .stat-bar for", statElement.id);
-                        # bar = document.createElement('div');
-                        # bar.className = 'stat-bar';
-                        # statElement.insertBefore(bar, statElement.firstChild);
-                    # }
-                    # const clampedPercentage = Math.min(100, Math.max(0, parseFloat(percentage)));
-                    # statElement.style.setProperty('--stat-percentage', clampedPercentage + '%');
-                    # // console.log("Stat Bar Script: Updated", statElement.id, "to", clampedPercentage + "%");
-                # }
+        #         function setBarPercentage(statElement, percentage) {
+        #             if (!statElement) {
+        #                 console.warn("Stat Bar Script: setBarPercentage called with no element.");
+        #                 return;
+        #             }
+        #             let bar = statElement.querySelector('.stat-bar');
+        #             if (!bar) {
+        #                 console.log("Stat Bar Script: Creating .stat-bar for", statElement.id);
+        #                 bar = document.createElement('div');
+        #                 bar.className = 'stat-bar';
+        #                 statElement.insertBefore(bar, statElement.firstChild);
+        #             }
+        #             const clampedPercentage = Math.min(100, Math.max(0, parseFloat(percentage)));
+        #             statElement.style.setProperty('--stat-percentage', clampedPercentage + '%');
+        #             // console.log("Stat Bar Script: Updated", statElement.id, "to", clampedPercentage + "%");
+        #         }
 
-                # function updateSingleStatVisual(key, config) {
-                    # try {
-                        # const container = document.querySelector(config.selector);
-                        # if (!container) {
-                            # // console.warn("Stat Bar Script: Container not found for", key, config.selector);
-                            # return false; // Element not ready
-                        # }
-                        # const textarea = container.querySelector('textarea');
-                        # if (!textarea) {
-                            # // console.warn("Stat Bar Script: Textarea not found for", key);
-                            # return false; // Element not ready
-                        # }
+        #         function updateSingleStatVisual(key, config) {
+        #             try {
+        #                 const container = document.querySelector(config.selector);
+        #                 if (!container) {
+        #                     // console.warn("Stat Bar Script: Container not found for", key, config.selector);
+        #                     return false; // Element not ready
+        #                 }
+        #                 const textarea = container.querySelector('textarea');
+        #                 if (!textarea) {
+        #                     // console.warn("Stat Bar Script: Textarea not found for", key);
+        #                     return false; // Element not ready
+        #                 }
 
-                        # const textValue = textarea.value;
-                        # if (textValue === "RAM: N/A" || textValue === "VRAM: N/A" || textValue === "GPU: N/A") {
-                             # setBarPercentage(container, 0); // Set to 0 if N/A
-                             # return true;
-                        # }
+        #                 const textValue = textarea.value;
+        #                 if (textValue === "RAM: N/A" || textValue === "VRAM: N/A" || textValue === "GPU: N/A") {
+        #                     setBarPercentage(container, 0); // Set to 0 if N/A
+        #                     return true;
+        #                 }
 
-                        # const match = textValue.match(config.regex);
-                        # if (match) {
-                            # let percentage = 0;
-                            # if (config.isRawPercentage) {
-                                # percentage = parseInt(match[config.valueIndex]);
-                            # } else { // VRAM case
-                                # const used = parseFloat(match[config.usedIndex]);
-                                # const total = parseFloat(match[config.totalIndex]);
-                                # percentage = (total > 0) ? (used / total) * 100 : 0;
-                            # }
-                            # setBarPercentage(container, percentage);
-                        # } else {
-                            # // console.warn("Stat Bar Script: Regex mismatch for", key, "-", textValue);
-                             # setBarPercentage(container, 0); // Default to 0 on mismatch after initial load
-                        # }
-                        # return true; // Processed or N/A
-                    # } catch (error) {
-                        # console.error("Stat Bar Script: Error updating visual for", key, error);
-                        # return true; // Assume processed to avoid retry loops on error
-                    # }
-                # }
+        #                 const match = textValue.match(config.regex);
+        #                 if (match) {
+        #                     let percentage = 0;
+        #                     if (config.isRawPercentage) {
+        #                         percentage = parseInt(match[config.valueIndex]);
+        #                     } else { // VRAM case
+        #                         const used = parseFloat(match[config.usedIndex]);
+        #                         const total = parseFloat(match[config.totalIndex]);
+        #                         percentage = (total > 0) ? (used / total) * 100 : 0;
+        #                     }
+        #                     setBarPercentage(container, percentage);
+        #                 } else {
+        #                     // console.warn("Stat Bar Script: Regex mismatch for", key, "-", textValue);
+        #                     setBarPercentage(container, 0); // Default to 0 on mismatch after initial load
+        #                 }
+        #                 return true; // Processed or N/A
+        #             } catch (error) {
+        #                 console.error("Stat Bar Script: Error updating visual for", key, error);
+        #                 return true; // Assume processed to avoid retry loops on error
+        #             }
+        #         }
                 
-                # function updateAllStatVisuals() {
-                    # let allReady = true;
-                    # for (const key in statConfig) {
-                        # if (!updateSingleStatVisual(key, statConfig[key])) {
-                            # allReady = false;
-                        # }
-                    # }
-                    # return allReady;
-                # }
+        #         function updateAllStatVisuals() {
+        #             let allReady = true;
+        #             for (const key in statConfig) {
+        #                 if (!updateSingleStatVisual(key, statConfig[key])) {
+        #                     allReady = false;
+        #                 }
+        #             }
+        #             return allReady;
+        #         }
 
-                # function initStatBars() {
-                    # console.log("Stat Bar Script: initStatBars called");
-                    # if (updateAllStatVisuals()) {
-                        # console.log("Stat Bar Script: All stats initialized. Setting up MutationObserver.");
-                        # setupMutationObservers();
-                    # } else {
-                        # console.log("Stat Bar Script: Elements not ready, retrying init in 250ms.");
-                        # setTimeout(initStatBars, 250); // Retry if not all elements were ready
-                    # }
-                # }
+        #         function initStatBars() {
+        #             console.log("Stat Bar Script: initStatBars called");
+        #             if (updateAllStatVisuals()) {
+        #                 console.log("Stat Bar Script: All stats initialized. Setting up MutationObserver.");
+        #                 setupMutationObservers();
+        #             } else {
+        #                 console.log("Stat Bar Script: Elements not ready, retrying init in 250ms.");
+        #                 setTimeout(initStatBars, 250); // Retry if not all elements were ready
+        #             }
+        #         }
 
-                # function setupMutationObservers() {
-                    # const observer = new MutationObserver((mutationsList) => {
-                        # // Use a Set to avoid redundant updates if multiple mutations point to the same stat
-                        # const changedStats = new Set();
+        #         function setupMutationObservers() {
+        #             const observer = new MutationObserver((mutationsList) => {
+        #                 // Use a Set to avoid redundant updates if multiple mutations point to the same stat
+        #                 const changedStats = new Set();
 
-                        # for (const mutation of mutationsList) {
-                            # let targetElement = mutation.target;
-                            # // Traverse up to find the .toolbar-stat-textbox parent if mutation is deep
-                            # while(targetElement && !targetElement.matches('.toolbar-stat-textbox')) {
-                                # targetElement = targetElement.parentElement;
-                            # }
+        #                 for (const mutation of mutationsList) {
+        #                     let targetElement = mutation.target;
+        #                     // Traverse up to find the .toolbar-stat-textbox parent if mutation is deep
+        #                     while(targetElement && !targetElement.matches('.toolbar-stat-textbox')) {
+        #                         targetElement = targetElement.parentElement;
+        #                     }
 
-                            # if (targetElement && targetElement.matches('.toolbar-stat-textbox')) {
-                                # for (const key in statConfig) {
-                                    # if (targetElement.id === statConfig[key].selector.substring(1)) {
-                                        # changedStats.add(key);
-                                        # break;
-                                    # }
-                                # }
-                            # }
-                        # }
-                        # if (changedStats.size > 0) {
-                           # // console.log("Stat Bar Script: MutationObserver detected changes for:", Array.from(changedStats));
-                           # changedStats.forEach(key => updateSingleStatVisual(key, statConfig[key]));
-                        # }
-                    # });
+        #                     if (targetElement && targetElement.matches('.toolbar-stat-textbox')) {
+        #                         for (const key in statConfig) {
+        #                             if (targetElement.id === statConfig[key].selector.substring(1)) {
+        #                                 changedStats.add(key);
+        #                                 break;
+        #                             }
+        #                         }
+        #                     }
+        #                 }
+        #                 if (changedStats.size > 0) {
+        #                     // console.log("Stat Bar Script: MutationObserver detected changes for:", Array.from(changedStats));
+        #                     changedStats.forEach(key => updateSingleStatVisual(key, statConfig[key]));
+        #                 }
+        #             });
 
-                    # for (const key in statConfig) {
-                        # const container = document.querySelector(statConfig[key].selector);
-                        # if (container) {
-                            # // Observe the container for changes to its children (like textarea value)
-                            # // and the textarea itself if it exists.
-                            # observer.observe(container, { childList: true, subtree: true, characterData: true });
-                            # console.log("Stat Bar Script: Observer attached to", container.id);
-                        # } else {
-                            # console.warn("Stat Bar Script: Could not attach observer, container not found for", key);
-                        # }
-                    # }
-                # }
+        #             for (const key in statConfig) {
+        #                 const container = document.querySelector(statConfig[key].selector);
+        #                 if (container) {
+        #                     // Observe the container for changes to its children (like textarea value)
+        #                     // and the textarea itself if it exists.
+        #                     observer.observe(container, { childList: true, subtree: true, characterData: true });
+        #                     console.log("Stat Bar Script: Observer attached to", container.id);
+        #                 } else {
+        #                     console.warn("Stat Bar Script: Could not attach observer, container not found for", key);
+        #                 }
+        #             }
+        #         }
 
-                # // More robust DOM ready check
-                # if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
-                    # console.log("Stat Bar Script: DOM already ready.");
-                    # initStatBars();
-                # } else {
-                    # document.addEventListener("DOMContentLoaded", () => {
-                        # console.log("Stat Bar Script: DOMContentLoaded event.");
-                        # initStatBars();
-                    # });
-                # }
-                 # // Fallback for Gradio's dynamic loading, if DOMContentLoaded isn't enough
-                 # window.addEventListener('gradio.rendered', () => {
-                    # console.log('Stat Bar Script: Gradio rendered event detected.');
-                    # initStatBars();
-                # });
+        #         // More robust DOM ready check
+        #         if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
+        #             console.log("Stat Bar Script: DOM already ready.");
+        #             initStatBars();
+        #         } else {
+        #             document.addEventListener("DOMContentLoaded", () => {
+        #                 console.log("Stat Bar Script: DOMContentLoaded event.");
+        #                 initStatBars();
+        #             });
+        #         }
+        #         // Fallback for Gradio's dynamic loading, if DOMContentLoaded isn't enough
+        #         window.addEventListener('gradio.rendered', () => {
+        #             console.log('Stat Bar Script: Gradio rendered event detected.');
+        #             initStatBars();
+        #         });
 
-            # })();
-            # </script>
+        #     })();
+        #     </script>
         # """)
 
         # Connect the auto-check function to the interface load event
@@ -2051,7 +2049,7 @@ def create_interface(
             outputs=[model_type, preset_dropdown, preset_name_textbox] + list(ui_components.values()) # ui_components is now defined
         ).then(
             fn=update_start_button_state, # Ensure button state is correct after startup settings
-            inputs=[model_type, input_video], 
+            inputs=[model_type, input_video],  
             outputs=[start_button, video_input_required_message]
         )
         
@@ -2074,16 +2072,27 @@ def format_queue_status(jobs):
                 start_datetime = datetime.datetime.fromtimestamp(job.started_at)
                 complete_datetime = datetime.datetime.fromtimestamp(job.completed_at)
                 elapsed_seconds = (complete_datetime - start_datetime).total_seconds()
-                elapsed_time = f"{elapsed_seconds:.2f}s"
+                elapsed_time = f"{elapsed_seconds:.2f}秒" # Translated "s" -> "秒"
             else:
                 # For running jobs, calculate elapsed time from now
                 start_datetime = datetime.datetime.fromtimestamp(job.started_at)
                 current_datetime = datetime.datetime.now()
                 elapsed_seconds = (current_datetime - start_datetime).total_seconds()
-                elapsed_time = f"{elapsed_seconds:.2f}s (running)"
+                elapsed_time = f"{elapsed_seconds:.2f}秒 (運行中)" # Translated "s (running)" -> "秒 (運行中)"
 
         # Get generation type from job data
-        generation_type = getattr(job, 'generation_type', 'Original')
+        # Note: Original English values are "Original", "Original with Endframe", etc.
+        # We need to map these to their Chinese display names for the table.
+        generation_type_display = {
+            "Original": "原始",
+            "Original with Endframe": "帶結束幀的原始",
+            "F1": "F1",
+            "Video": "影片",
+            "Video with Endframe": "帶結束幀的影片",
+            "Video F1": "影片 F1",
+            # Add other types if they exist, otherwise default to the original string
+        }.get(getattr(job, 'generation_type', 'Original'), getattr(job, 'generation_type', 'Original'))
+
 
         # Get thumbnail from job data and format it as HTML for display
         thumbnail = getattr(job, 'thumbnail', None)
@@ -2091,8 +2100,14 @@ def format_queue_status(jobs):
 
         rows.append([
             job.id[:6] + '...',
-            generation_type,
-            job.status.value,
+            generation_type_display, # Use translated display name
+            {
+                "JobStatus.PENDING": "待處理",
+                "JobStatus.RUNNING": "運行中",
+                "JobStatus.COMPLETED": "已完成",
+                "JobStatus.FAILED": "失敗",
+                "JobStatus.CANCELLED": "已取消"
+            }.get(str(job.status), str(job.status)), # Translate JobStatus
             created,
             started,
             completed,
